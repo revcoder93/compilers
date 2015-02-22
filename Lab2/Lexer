@@ -1,0 +1,180 @@
+import java.util.*;
+import java.io.*;
+
+/* semantic value of token returned by scanner */
+
+public class lexer
+{
+	public static void main (String[] args) throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader("input.hs"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"));
+		Yylex yy = new Yylex (reader);
+		while(true)
+		{
+			String x =yy.next_token();
+			if(x==null)
+				break;
+			writer.write(x);	
+			writer.write('\n');
+		}
+		reader.close();
+		writer.close();
+	}
+}
+
+%%
+%function next_token
+%type String
+
+%eofval{
+  return null;
+%eofval}
+
+%{
+  public String sourceFilename;
+%}
+%state COMMENT
+%state BCOMMENT
+
+
+
+KEYWORD=data|if|else|otherwise|type|deriving
+ALPHA=[A-Za-z]
+DIGIT=[0-9]
+ALPHA_NUMERIC={ALPHA}|{DIGIT}
+IDENTIFIER={ALPHA}({ALPHA_NUMERIC})*
+NUMBER=(([-])?{DIGIT})
+LC=\{
+RC=\}
+LB=\(
+RB=\)
+SM=;
+CL=:
+CN=\++
+FA=,
+HT=::
+AR=->
+WC=_
+BR=\|
+LS=\[
+RS=\]
+GE=>=
+LE=<=
+GT=>
+LT=<
+MO=\-
+MB=\*
+FN=!!
+DD=\..
+STRING=\"(.)*\"
+CS=\{-
+CE=-\}
+
+WHITE_SPACE=([\ \n\r\t\f\b])+
+%%
+
+
+
+<YYINITIAL> "--" {
+  yybegin(COMMENT);
+}
+<COMMENT> [^\n] {
+}
+<COMMENT> [\n] {
+  yybegin(YYINITIAL);
+}
+<YYINITIAL> [\{\-] {
+  yybegin(BCOMMENT);
+}
+<BCOMMENT> [^\-\}] {
+}
+<BCOMMENT> [\-\}] {
+  yybegin(YYINITIAL);
+}
+<YYINITIAL> {LC} { 
+  return "LC\t"+ yytext();
+}
+<YYINITIAL> {DD} { 
+  return "DD\t"+ yytext();
+}
+<YYINITIAL> {FN} { 
+  return "FN\t"+ yytext();
+}
+<YYINITIAL> {BR} { 
+  return "BR\t"+ yytext();
+}
+<YYINITIAL> {MB} { 
+  return "MB\t"+ yytext();
+}
+<YYINITIAL> {MO} { 
+  return "MO\t"+ yytext();
+}
+<YYINITIAL> {STRING} { 
+  return "ST\t"+ yytext();
+}
+<YYINITIAL> {HT} { 
+  return "HT\t"+ yytext();
+}
+<YYINITIAL> {GT} { 
+  return "GT\t"+ yytext();
+}
+<YYINITIAL> {LT} { 
+  return "LT\t"+ yytext();
+}
+<YYINITIAL> {GE} { 
+  return "GE\t"+ yytext();
+}
+<YYINITIAL> {LE} { 
+  return "LE\t"+ yytext();
+}
+<YYINITIAL> {WC} { 
+  return "WC\t"+ yytext();
+}
+<YYINITIAL> {AR} { 
+  return "AR\t"+ yytext();
+}
+<YYINITIAL> {FA} { 
+  return "FA\t"+ yytext();
+}
+<YYINITIAL> {CN} { 
+  return "CN\t"+ yytext();
+}
+<YYINITIAL> {CL} { 
+  return "CL\t"+ yytext();
+}
+<YYINITIAL> {KEYWORD} { 
+  return "KW\t"+ yytext();
+}
+<YYINITIAL> {IDENTIFIER} { 
+  return "ID\t"+ yytext();
+}
+<YYINITIAL> {SM} { 
+  return "SM\t"+ yytext();
+}
+<YYINITIAL> {LS} { 
+  return "LS\t"+ yytext();
+}
+<YYINITIAL> {RS} { 
+  return "RS\t"+ yytext();
+}
+<YYINITIAL> {RB} { 
+  return "RB\t"+ yytext();
+}
+<YYINITIAL> {NUMBER} { 
+  return "NM\t"+ yytext();
+}
+<YYINITIAL> {LB} { 
+  return "LB\t"+ yytext();
+}
+<YYINITIAL> {RC} { 
+  return "RC\t"+ yytext();
+}
+<YYINITIAL> {WHITE_SPACE} { 
+}
+<YYINITIAL> "=" { 
+  return "AO\t="; 
+}
+<YYINITIAL> . { 
+  return "Undefined\t"+yytext(); 
+}
