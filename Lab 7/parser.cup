@@ -25,7 +25,15 @@ condH ::= ID:i1 EQ ID:i2 {:RESULT =i1 +" is equal to "+ i2;:} | ID:i1 LT ID:i2 {
 statement ::= ID:i AO oper:o SM {:RESULT = i+" equals "+o+".\n";:}
 				| error {:RESULT = "wrong line\n";System.out.println("wrong statement");:};
 
-function ::= ID:i1 ID:i2 AO oper:o1 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 ID:i2 AO PL oper:o1 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 ID:i2 AO ML oper:o1 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 ID:i2 AO PL oper:o1 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 ID:i2 AO function:f1 ID:i1 ID:i3 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 ID:i2 AO cond:c1 AO ID:i2 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 ID:i2 AO ID:i3 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 LB ID:i2 CL ID:i3 RB AO oper:o {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 LB ID:i2 CL ID:i3 RB AO ID:i4 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
+function ::= ID:i1 LB ID:i2 CL ID:i3 RB AO oper:o function:f1 {:RESULT = "True";System.out.println("True");:}| error {:RESULT = "False";System.out.println("False");:};
 
 
 oper ::= NM:n2 {:RESULT=""+new Integer((String)n2);:}| NM:n3 MB oper:o {:AP.h();RESULT=n3+" times "+o;:} | NM:n4 PL oper:o1 {:AP.h();RESULT=n4+" plus "+o1;:} | NM:n5 MO oper:o2 {:AP.h();RESULT=n5+" minus "+o2;:};	
