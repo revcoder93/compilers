@@ -1,0 +1,56 @@
+
+import java_cup.runtime.*;
+	
+/* Terminals (tokens returned by the scanner). */
+terminal			PL,AA,OO,EQ,QM,ID,AO,LC,RC,NM,LB,RB,SM,CL,CN,FA,HT,AR,WC,BR,LS,RS,GE,LE,GT,LT,MO,MB,FN,DD,STRING,CS,CE;
+
+/* Non-terminals */
+nonterminal	String		program, statement, conditional, cond, condH, oper;
+
+/*nonterminal	Integer     operH;*/
+
+
+/* The grammar */
+
+program ::= program:p conditional:c {:RESULT = p + c;:}| program:p statement:s {:RESULT = p + s;:}
+			  |  {:RESULT = "";:};
+			  
+conditional ::= ID:i AO LB cond:c RB QM ID:i1 CL ID:i2 SM {:RESULT ="if "+c+", then set "+i+" to "+i1+", else set "+i+" to "+i2+".\n";:};
+		  
+cond ::= cond:c1 OO condH:c2 {:RESULT =c1 +" or "+ c2;:} | cond:c1 AA condH:c2 {:RESULT =c1 +" and "+ c2;:} | condH:c {:RESULT =c;:};
+
+condH ::= ID:i1 EQ ID:i2 {:RESULT =i1 +" is equal to "+ i2;:} | ID:i1 LT ID:i2 {:RESULT =i1 +" is less than "+ i2;:} | ID:i1 GT ID:i2 {:RESULT =i1 +" is more than "+ i2;:};
+		  
+		  
+statement ::= ID:i AO oper:o SM {:RESULT = i+" equals "+o+".\n";:}
+				| error {:RESULT = "wrong line\n";System.out.println("wrong statement");:};
+
+
+oper ::= NM:n2 {:RESULT=""+new Integer((String)n2);:}| NM:n3 MB oper:o {:AP.h();RESULT=n3+" times "+o;:} | NM:n4 PL oper:o1 {:AP.h();RESULT=n4+" Plus "+o1;:};				
+
+/* {:AP.h();RESULT=n3+" times "+o+"("+new Integer((String)n3)*new Integer((String)o)+")";:} */
+/*oper ::= NM:n2 operH:o{:RESULT=""+new Integer((String)n2)*o;:};*/
+
+/*operH ::= ML NM:n1{:RESULT =new Integer((String)n1);:}| {:RESULT=1;:};*/
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

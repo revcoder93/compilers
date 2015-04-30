@@ -1,0 +1,7 @@
+a equals 10.
+b equals 14.
+if a is more than b, then set max to a, else set max to b.
+if a is less than b, then set min to a, else set min to b.
+c equals 10.
+if a is equal to b and a is equal to c, then set eq to true, else set eq to false.
+if a is equal to b or a is equal to c or b is equal to c, then set pa to true, else set pa to false.
